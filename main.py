@@ -3,8 +3,8 @@ import os
 os.environ['QT_QPA_PLATFORM'] = 'xcb'
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QPushButton, QFileDialog, QLabel, QComboBox, QAction, QSlider, QHBoxLayout
 from PyQt5.QtCore import Qt
-from render_engine import Model3DWidget  # Importa desde render_engine.py
-from properties import TextureWindow
+from render_engine import Render  # Importa desde render_engine.py
+from properties import Properties
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -12,13 +12,13 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('Darkmoon Engine')
         self.setGeometry(100, 100, 1280, 720)
 
-        self.model_widget = Model3DWidget()
-        self.setCentralWidget(self.model_widget)
+        self.render_widget = Render()
+        self.setCentralWidget(self.render_widget)
 
         # Inicializa la ventana de propiedades pero no la muestra
-        self.texture_window = TextureWindow(self.model_widget)
-        self.texture_window.setWindowTitle('Editor de Texturas')
-        self.texture_window.setGeometry(900, 100, 300, 200)
+        self.properties_widget = Properties(self.render_widget)
+        self.properties_widget.setWindowTitle('Editor de Texturas')
+        self.properties_widget.setGeometry(900, 100, 300, 200)
 
         self.create_menu()
 
@@ -38,14 +38,14 @@ class MainWindow(QMainWindow):
     def open_file(self):
         filename, _ = QFileDialog.getOpenFileName(self, 'Abrir Modelo 3D', '', 'Modelos (*.obj)')
         if filename:
-            self.model_widget.load_model(filename)
-            self.texture_window.update_material_list()
+            self.render_widget.load_model(filename)
+            self.properties_widget.update_material_list()
 
     def toggle_properties_window(self):
-        if self.texture_window.isVisible():
-            self.texture_window.hide()
+        if self.properties_widget.isVisible():
+            self.properties_widget.hide()
         else:
-            self.texture_window.show()
+            self.properties_widget.show()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

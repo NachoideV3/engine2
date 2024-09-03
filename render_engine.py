@@ -6,7 +6,7 @@ from OpenGL.GLU import *
 import numpy as np
 from PIL import Image
 
-class Model3DWidget(QOpenGLWidget):
+class Render(QOpenGLWidget):
     def __init__(self):
         super().__init__()
         self.timer = QTimer()

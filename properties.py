@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QOpenGLWidget
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QPushButton, QFileDialog, QLabel, QComboBox, QAction, QSlider, QHBoxLayout
 
-class TextureWindow(QWidget):
+class Properties(QWidget):
     def __init__(self, model_widget):
         super().__init__()
         self.model_widget = model_widget
