@@ -4,8 +4,8 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import numpy as np
-from PIL import Image
 from skybox import Skybox
+from texture_loader import TextureLoader  # Importar la clase TextureLoader
 
 class Render(QOpenGLWidget):
     def __init__(self):
@@ -18,6 +18,7 @@ class Render(QOpenGLWidget):
         self.current_material = None
         self.camera_distance = 20.0  # Distancia inicial de la cámara
         self.scale_factor = 1.0  # Factor de escala inicial
+        self.texture_loader = TextureLoader()  # Instanciar TextureLoader
         self.skybox = Skybox() 
 
     def initializeGL(self):
@@ -41,24 +42,7 @@ class Render(QOpenGLWidget):
         self.skybox.load_texture('hdri/meadow_2.jpg')
 
     def load_texture(self, material_name, filename):
-        try:
-            image = Image.open(filename)
-            image = image.transpose(Image.FLIP_TOP_BOTTOM)
-            image_data = np.array(image.convert("RGBA"), dtype=np.uint8)
-
-            if material_name in self.materials:
-                if 'texture_id' in self.materials[material_name]:
-                    glDeleteTextures(self.materials[material_name]['texture_id'])
-                self.materials[material_name]['texture_id'] = glGenTextures(1)
-                glBindTexture(GL_TEXTURE_2D, self.materials[material_name]['texture_id'])
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_data.shape[1], image_data.shape[0], 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data)
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-                print(f"Textura cargada para el material {material_name}")
-            else:
-                print(f"Material {material_name} no encontrado para cargar la textura.")
-        except Exception as e:
-            print(f"Error al cargar la textura: {e}")
+        self.texture_loader.load_texture(material_name, filename)
 
     def load_model(self, filename):
         print(f"Intentando abrir: {filename}")
@@ -125,10 +109,10 @@ class Render(QOpenGLWidget):
             glScalef(self.scale_factor, self.scale_factor, self.scale_factor)  # Aplicar escala
             for face, face_uvs, material_name in faces:
                 if material_name and material_name in self.materials:
-                    material = self.materials[material_name]
-                    if 'texture_id' in material:
+                    texture_id = self.texture_loader.get_texture(material_name)
+                    if texture_id:
                         glEnable(GL_TEXTURE_2D)
-                        glBindTexture(GL_TEXTURE_2D, material['texture_id'])
+                        glBindTexture(GL_TEXTURE_2D, texture_id)
                     else:
                         glDisable(GL_TEXTURE_2D)
                 else:
