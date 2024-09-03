@@ -3,10 +3,10 @@ from PyQt5.QtCore import QTimer
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
-from skybox import Skybox
-from texture_loader import TextureLoader
-from model_loader import load_model
-from input_handler import InputHandler  # Importar la clase InputHandler
+from .skybox import Skybox
+from .loader.texture_loader import TextureLoader
+from .loader.model_loader import load_model
+from input.input_handler import InputHandler  # Importar la clase InputHandler
 
 class Render(QOpenGLWidget):
     def __init__(self):

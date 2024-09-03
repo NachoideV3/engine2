@@ -3,7 +3,7 @@ import os
 os.environ['QT_QPA_PLATFORM'] = 'xcb'
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QPushButton, QFileDialog, QLabel, QComboBox, QAction, QSlider, QHBoxLayout
 from PyQt5.QtCore import Qt
-from render_engine import Render  # Importa desde render_engine.py
+from render.render_engine import Render  # Importa desde render_engine.py
 from properties import Properties
 
 class MainWindow(QMainWindow):
