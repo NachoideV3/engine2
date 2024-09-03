@@ -1,8 +1,5 @@
-import sys
-import os
-os.environ['QT_QPA_PLATFORM'] = 'xcb'
-from PyQt5.QtWidgets import QApplication, QMainWindow, QOpenGLWidget, QWidget, QVBoxLayout, QPushButton, QFileDialog, QLabel, QComboBox, QAction, QSlider, QHBoxLayout
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtWidgets import QOpenGLWidget
+from PyQt5.QtCore import QTimer
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -162,74 +159,9 @@ class Model3DWidget(QOpenGLWidget):
 
     def update_materials(self):
         # Actualiza la lista de materiales en la ventana de texturas
-        if self.parent() and isinstance(self.parent(), MainWindow):
+        if self.parent() and hasattr(self.parent(), 'texture_window'):
             self.parent().texture_window.update_material_list()
 
     def set_scale(self, scale):
         self.scale_factor = scale
         self.update()
-
-class TextureWindow(QWidget):
-    def __init__(self, model_widget):
-        super().__init__()
-        self.model_widget = model_widget
-        self.initUI()
-
-    def initUI(self):
-        layout = QVBoxLayout()
-
-        self.material_combo = QComboBox()
-        self.material_combo.currentIndexChanged.connect(self.on_material_changed)
-        layout.addWidget(self.material_combo)
-
-        self.albedo_button = QPushButton('Cargar Albedo')
-        self.albedo_button.clicked.connect(self.load_albedo_texture)
-        layout.addWidget(self.albedo_button)
-
-        self.normal_button = QPushButton('Cargar Normal')
-        self.normal_button.clicked.connect(self.load_normal_texture)
-        layout.addWidget(self.normal_button)
-
-        # Añadir control de escala
-        scale_layout = QHBoxLayout()
-        self.scale_label = QLabel('Escala:')
-        scale_layout.addWidget(self.scale_label)
-
-        self.scale_slider = QSlider(Qt.Horizontal)
-        self.scale_slider.setRange(1, 100)
-        self.scale_slider.setValue(10)  # Valor inicial
-        self.scale_slider.valueChanged.connect(self.update_scale)
-        scale_layout.addWidget(self.scale_slider)
-
-        layout.addLayout(scale_layout)
-        
-        self.setLayout(layout)
-        self.setWindowTitle('Properties')
-        self.resize(300, 150)
-
-    def load_albedo_texture(self):
-        filename, _ = QFileDialog.getOpenFileName(self, 'Seleccionar textura albedo', '', 'Imágenes (*.png *.jpg *.bmp)')
-        if filename:
-            current_material = self.material_combo.currentText()
-            if current_material:
-                self.model_widget.load_texture(current_material, filename)
-
-    def load_normal_texture(self):
-        filename, _ = QFileDialog.getOpenFileName(self, 'Seleccionar textura normal', '', 'Imágenes (*.png *.jpg *.bmp)')
-        if filename:
-            current_material = self.material_combo.currentText()
-            if current_material:
-                self.model_widget.load_texture(current_material, filename)
-
-    def on_material_changed(self):
-        material_name = self.material_combo.currentText()
-        if material_name:
-            print(f"Material seleccionado: {material_name}")
-
-    def update_material_list(self):
-        self.material_combo.clear()
-        self.material_combo.addItems(self.model_widget.materials.keys())
-
-    def update_scale(self, value):
-        scale = value / 10.0  # Ajustar el factor de escala
-        self.model_widget.set_scale(scale)
