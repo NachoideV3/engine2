@@ -23,6 +23,7 @@ class MainWindow(QMainWindow):
         self.create_menu()
 
     def create_menu(self):
+        self.menuBar().clear()
         menu_bar = self.menuBar()
         file_menu = menu_bar.addMenu('File')
         view_menu = menu_bar.addMenu('View')
@@ -46,6 +47,9 @@ class MainWindow(QMainWindow):
         if filename:
             self.render_widget.load_model(filename)
             self.properties_widget.update_material_list()
+            self.create_menu()
+        else:
+            self.create_menu()
 
     def toggle_properties_window(self):
         if self.properties_widget.isVisible():
