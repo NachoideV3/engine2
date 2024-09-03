@@ -27,7 +27,7 @@ class Skybox:
         glColor3f(1.0, 1.0, 1.0)  # Color blanco para el skybox
 
         # Definir las caras del cubo
-        size = 10  # Tamaño del cubo
+        size = 20  # Tamaño del cubo
         vertices = [
             [-size, -size, -size], [size, -size, -size], [size, size, -size], [-size, size, -size],  # Frente
             [-size, -size, size], [size, -size, size], [size, size, size], [-size, size, size],  # Atrás
