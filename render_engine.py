@@ -1,11 +1,13 @@
+# render.py
+
 from PyQt5.QtWidgets import QOpenGLWidget
 from PyQt5.QtCore import QTimer
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
-import numpy as np
 from skybox import Skybox
-from texture_loader import TextureLoader  # Importar la clase TextureLoader
+from texture_loader import TextureLoader
+from model_loader import load_model  # Importar la función load_model
 
 class Render(QOpenGLWidget):
     def __init__(self):
@@ -45,54 +47,8 @@ class Render(QOpenGLWidget):
         self.texture_loader.load_texture(material_name, filename)
 
     def load_model(self, filename):
-        print(f"Intentando abrir: {filename}")
-        self.model = []
-        vertices = []
-        uvs = []
-        faces = []
-        self.current_material = None
-
-        try:
-            with open(filename, 'r') as file:
-                for line in file:
-                    if line.startswith('v '):  # Vértices
-                        vertex = list(map(float, line.strip().split()[1:]))
-                        vertices.append(vertex)
-                    elif line.startswith('vt '):  # Coordenadas UV
-                        uv = list(map(float, line.strip().split()[1:]))
-                        uvs.append(uv)
-                    elif line.startswith('f '):  # Caras
-                        face = line.strip().split()[1:]
-                        face_indices = []
-                        face_uvs = []
-                        for part in face:
-                            indices = part.split('/')
-                            vertex_index = int(indices[0]) - 1
-                            face_indices.append(vertex_index)
-                            if len(indices) > 1 and indices[1]:
-                                uv_index = int(indices[1]) - 1
-                                face_uvs.append(uv_index)
-                            else:
-                                face_uvs.append(None)  # No hay coordenada UV
-                        # Convertir la cara en triángulos
-                        if len(face_indices) == 3:
-                            faces.append((face_indices, face_uvs, self.current_material))
-                        elif len(face_indices) > 3:
-                            # Divide la cara en triángulos
-                            for i in range(1, len(face_indices) - 1):
-                                faces.append(([face_indices[0], face_indices[i], face_indices[i + 1]], 
-                                            [face_uvs[0], face_uvs[i], face_uvs[i + 1]], 
-                                            self.current_material))
-                    elif line.startswith('usemtl '):  # Material
-                        self.current_material = line.strip().split()[1]
-                        if self.current_material not in self.materials:
-                            self.materials[self.current_material] = {}
-            self.model = (vertices, uvs, faces)
-            print(f"Modelo cargado: {len(vertices)} vértices, {len(faces)} caras")
-            print(f"Materiales: {self.materials.keys()}")
-            self.update_materials()
-        except Exception as e:
-            print(f"Error al cargar el modelo: {e}")
+        self.model, self.materials = load_model(filename)
+        self.update_materials()
 
     def paintGL(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
