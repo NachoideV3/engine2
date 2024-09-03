@@ -1,5 +1,3 @@
-# render.py
-
 from PyQt5.QtWidgets import QOpenGLWidget
 from PyQt5.QtCore import QTimer
 from OpenGL.GL import *
@@ -7,7 +5,8 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from skybox import Skybox
 from texture_loader import TextureLoader
-from model_loader import load_model  # Importar la función load_model
+from model_loader import load_model
+from input_handler import InputHandler  # Importar la clase InputHandler
 
 class Render(QOpenGLWidget):
     def __init__(self):
@@ -21,7 +20,8 @@ class Render(QOpenGLWidget):
         self.camera_distance = 20.0  # Distancia inicial de la cámara
         self.scale_factor = 1.0  # Factor de escala inicial
         self.texture_loader = TextureLoader()  # Instanciar TextureLoader
-        self.skybox = Skybox() 
+        self.skybox = Skybox()
+        self.input_handler = InputHandler(self)  # Instanciar InputHandler
 
     def initializeGL(self):
         glutInit()
@@ -87,13 +87,13 @@ class Render(QOpenGLWidget):
             glPopMatrix()
 
     def wheelEvent(self, event):
-        delta = event.angleDelta().y()
-        if delta > 0:  # Scroll hacia arriba
-            self.camera_distance -= 0.5
-        else:  # Scroll hacia abajo
-            self.camera_distance += 0.5
-        self.camera_distance = max(1.0, self.camera_distance)  # Evitar acercarse demasiado
-        self.update()  # Redibujar la escena
+        self.input_handler.handle_wheel_event(event)
+
+    def keyPressEvent(self, event):
+        self.input_handler.handle_key_press_event(event)
+
+    def keyReleaseEvent(self, event):
+        self.input_handler.handle_key_release_event(event)
 
     def update_animation(self):
         self.update()
