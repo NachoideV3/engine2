@@ -1,0 +1,28 @@
+# Blender MTL File: 'None'
+# Material Count: 2
+
+newmtl Eyes
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Vanellope_Eye_Diff.png
+map_Disp Vanellope_Eye_Norm.png
+map_Ka Vanellope_Eye_Norm.png
+map_Ke Vanellope_Eye_Norm.png
+
+newmtl Vanellope
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Vanellope_Diff.png
+map_Disp Vanellope_Norm.png
+map_Ka Vanellope_Norm.png
+map_Ke Vanellope_Norm.png
