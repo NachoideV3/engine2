@@ -24,6 +24,19 @@ class TextureWindow(QWidget):
         self.normal_button.clicked.connect(self.load_normal_texture)
         layout.addWidget(self.normal_button)
 
+        # Botones adicionales para nuevas texturas
+        self.roughness_button = QPushButton('Cargar Roughness')
+        self.roughness_button.clicked.connect(self.load_roughness_texture)
+        layout.addWidget(self.roughness_button)
+
+        self.metalness_button = QPushButton('Cargar Metalness')
+        self.metalness_button.clicked.connect(self.load_metalness_texture)
+        layout.addWidget(self.metalness_button)
+
+        self.ao_button = QPushButton('Cargar Ambient Occlusion')
+        self.ao_button.clicked.connect(self.load_ao_texture)
+        layout.addWidget(self.ao_button)
+
         # Añadir control de escala
         scale_layout = QHBoxLayout()
         self.scale_label = QLabel('Escala:')
@@ -59,6 +72,27 @@ class TextureWindow(QWidget):
         filename, _ = QFileDialog.getOpenFileName(self, 'Cargar Textura Normal', '', 'Imágenes (*.png *.jpg *.bmp)')
         if filename:
             print(f"Normal para {material_name}: {filename}")
+            self.model_widget.load_texture(material_name, filename)
+
+    def load_roughness_texture(self):
+        material_name = self.material_combo.currentText()
+        filename, _ = QFileDialog.getOpenFileName(self, 'Cargar Textura Roughness', '', 'Imágenes (*.png *.jpg *.bmp)')
+        if filename:
+            print(f"Roughness para {material_name}: {filename}")
+            self.model_widget.load_texture(material_name, filename)
+
+    def load_metalness_texture(self):
+        material_name = self.material_combo.currentText()
+        filename, _ = QFileDialog.getOpenFileName(self, 'Cargar Textura Metalness', '', 'Imágenes (*.png *.jpg *.bmp)')
+        if filename:
+            print(f"Metalness para {material_name}: {filename}")
+            self.model_widget.load_texture(material_name, filename)
+
+    def load_ao_texture(self):
+        material_name = self.material_combo.currentText()
+        filename, _ = QFileDialog.getOpenFileName(self, 'Cargar Textura Ambient Occlusion', '', 'Imágenes (*.png *.jpg *.bmp)')
+        if filename:
+            print(f"Ambient Occlusion para {material_name}: {filename}")
             self.model_widget.load_texture(material_name, filename)
 
     def update_scale(self):
