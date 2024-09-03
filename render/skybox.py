@@ -14,7 +14,7 @@ class Skybox:
         # Generar una lista de visualización para la esfera del skybox
         self.sphere_list = glGenLists(1)
         glNewList(self.sphere_list, GL_COMPILE)
-        #self.create_sphere(radius=50, lats=40, longs=40)
+        self.create_sphere(radius=50, lats=40, longs=40)
         glEndList()
 
     def load_texture(self, texture_path):
