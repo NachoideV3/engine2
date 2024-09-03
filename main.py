@@ -17,7 +17,7 @@ class MainWindow(QMainWindow):
 
         # Inicializa la ventana de propiedades pero no la muestra
         self.properties_widget = Properties(self.render_widget)
-        self.properties_widget.setWindowTitle('Editor de Texturas')
+        self.properties_widget.setWindowTitle('Properties')
         self.properties_widget.setGeometry(900, 100, 300, 200)
 
         self.create_menu()
@@ -25,13 +25,19 @@ class MainWindow(QMainWindow):
     def create_menu(self):
         menu_bar = self.menuBar()
         file_menu = menu_bar.addMenu('File')
+        view_menu = menu_bar.addMenu('View')
+        about_menu = menu_bar.addMenu('About')
 
         open_action = QAction('Open', self)
         open_action.triggered.connect(self.open_file)
         file_menu.addAction(open_action)
 
+        fps_action = QAction('FPS', self)
+        fps_action.triggered.connect(self.open_file)
+        view_menu.addAction(fps_action)
+
         # Añadir opción para mostrar la ventana de propiedades
-        properties_action = QAction('Propiedades', self)
+        properties_action = QAction('Properties', self)
         properties_action.triggered.connect(self.toggle_properties_window)
         file_menu.addAction(properties_action)
 

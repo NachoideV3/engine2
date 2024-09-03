@@ -5,6 +5,7 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import numpy as np
 from PIL import Image
+from skybox import Skybox
 
 class Render(QOpenGLWidget):
     def __init__(self):
@@ -17,6 +18,7 @@ class Render(QOpenGLWidget):
         self.current_material = None
         self.camera_distance = 20.0  # Distancia inicial de la cámara
         self.scale_factor = 1.0  # Factor de escala inicial
+        self.skybox = Skybox() 
 
     def initializeGL(self):
         glutInit()
@@ -34,6 +36,9 @@ class Render(QOpenGLWidget):
         glLightfv(GL_LIGHT0, GL_SPECULAR, light_color)
 
         glClearColor(0.0, 0.0, 0.0, 1.0)  # Fondo negro
+        # Inicializar el skybox
+        self.skybox.initialize()
+        self.skybox.load_texture('hdri/meadow_2.jpg')
 
     def load_texture(self, material_name, filename):
         try:
@@ -109,6 +114,9 @@ class Render(QOpenGLWidget):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
         gluLookAt(0, 3, self.camera_distance, 0, 0, 0, 0, 1, 0)  # Usar la distancia de la cámara
+
+        # Dibujar el skybox
+        self.skybox.draw()
 
         # Dibujar el modelo 3D
         if self.model:
