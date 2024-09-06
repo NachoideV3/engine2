@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QOpenGLWidget
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer, QElapsedTimer
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -22,6 +22,12 @@ class Render(QOpenGLWidget):
         self.texture_loader = TextureLoader()  # Instanciar TextureLoader
         self.skybox = Skybox()
         self.input_handler = InputHandler(self)  # Instanciar InputHandler
+        # Para calcular FPS y tiempo por cuadro
+        self.elapsed_timer = QElapsedTimer()
+        self.elapsed_timer.start()
+        self.frame_count = 0
+        self.fps = 0
+        self.ms_per_frame = 0
 
     def initializeGL(self):
         glutInit()
@@ -86,6 +92,15 @@ class Render(QOpenGLWidget):
                 glEnd()
             glPopMatrix()
 
+        # Actualizar contador de cuadros y calcular FPS y ms por cuadro
+        self.frame_count += 1
+        elapsed = self.elapsed_timer.elapsed()  # Tiempo en milisegundos
+        if elapsed > 1000:  # Calcular FPS y ms por cuadro cada segundo
+            self.fps = self.frame_count / (elapsed / 1000.0)
+            self.ms_per_frame = elapsed / self.frame_count
+            self.frame_count = 0
+            self.elapsed_timer.restart()
+
     def wheelEvent(self, event):
         self.input_handler.handle_wheel_event(event)
 
@@ -113,3 +128,9 @@ class Render(QOpenGLWidget):
     def set_scale(self, scale):
         self.scale_factor = scale
         self.update()
+
+    def get_fps(self):
+        return self.fps
+
+    def get_ms_per_frame(self):
+        return self.ms_per_frame
