@@ -24,7 +24,9 @@ class Skybox:
             glBindTexture(GL_TEXTURE_2D, self.texture_id)
 
         glPushMatrix()
-        glDisable(GL_LIGHTING)  # Desactivar iluminación para el skybox
+        # Desactivar iluminación para el skybox
+        glDisable(GL_LIGHTING)
+        gluQuadricNormals(quadric, GL_NONE)
         glColor3f(1.0, 1.0, 1.0)  # Color blanco para la esfera
 
         # Aplicar rotación
