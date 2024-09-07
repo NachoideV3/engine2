@@ -1,3 +1,5 @@
+import pyopencl as cl
+import numpy as np
 from PyQt5.QtWidgets import QOpenGLWidget
 from PyQt5.QtCore import QTimer, QElapsedTimer
 from OpenGL.GL import *
@@ -6,7 +8,7 @@ from OpenGL.GLU import *
 from .skybox import Skybox
 from .loader.texture_loader import TextureLoader
 from .loader.model_loader import load_model
-from input.input_handler import InputHandler  # Importar la clase InputHandler
+from input.input_handler import InputHandler
 
 class Render(QOpenGLWidget):
     def __init__(self):
@@ -28,6 +30,17 @@ class Render(QOpenGLWidget):
         self.frame_count = 0
         self.fps = 0
         self.ms_per_frame = 0
+
+        # Configurar OpenCL
+        self.cl_context = None
+        self.cl_queue = None
+        self.init_opencl()
+
+    def init_opencl(self):
+        platforms = cl.get_platforms()
+        devices = platforms[0].get_devices(cl.device_type.GPU)
+        self.cl_context = cl.Context([devices[0]])
+        self.cl_queue = cl.CommandQueue(self.cl_context)
 
     def initializeGL(self):
         glutInit()
@@ -65,6 +78,9 @@ class Render(QOpenGLWidget):
         # Dibujar el skybox
         self.skybox.draw()
 
+        # Realizar cálculos con OpenCL (ejemplo)
+        self.perform_opencl_computation()
+
         # Dibujar el modelo 3D
         if self.model:
             vertices, uvs, faces = self.model
@@ -101,6 +117,11 @@ class Render(QOpenGLWidget):
             self.ms_per_frame = elapsed / self.frame_count
             self.frame_count = 0
             self.elapsed_timer.restart()
+
+    def perform_opencl_computation(self):
+        # Ejemplo de código OpenCL para realizar cálculos
+        # Crea un buffer y un programa OpenCL aquí
+        pass
 
     def wheelEvent(self, event):
         self.input_handler.handle_wheel_event(event)
