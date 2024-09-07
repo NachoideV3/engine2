@@ -37,7 +37,7 @@ class Skybox:
         gluQuadricTexture(quadric, GL_TRUE)  # Activar coordenadas de textura en la esfera
         gluSphere(quadric, size, 50, 50)  # Crear la esfera con textura
 
-        glEnable(GL_LIGHTING)  # Reactivar iluminación después del skybox
+        glDisable(GL_LIGHTING)  # Reactivar iluminación después del skybox
         glPopMatrix()
 
         if self.texture_id:

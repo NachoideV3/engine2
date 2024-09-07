@@ -42,7 +42,7 @@ class Properties(QWidget):
         self.scale_label = QLabel('Escala:')
         self.scale_slider = QSlider(Qt.Horizontal)
         self.scale_slider.setMinimum(1)
-        self.scale_slider.setMaximum(2600)
+        self.scale_slider.setMaximum(10000)
         self.scale_slider.setValue(100)  # Valor inicial
         self.scale_slider.valueChanged.connect(self.update_scale)
         scale_layout.addWidget(self.scale_label)
