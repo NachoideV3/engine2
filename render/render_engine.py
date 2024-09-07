@@ -48,6 +48,7 @@ class Render(QOpenGLWidget):
         # Inicializar el skybox
         self.skybox.initialize()
         self.skybox.load_texture('hdri/meadow_2.jpg')
+        self.skybox.set_rotation(90,180)
 
     def load_texture(self, material_name, filename):
         self.texture_loader.load_texture(material_name, filename)
