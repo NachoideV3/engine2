@@ -1,7 +1,23 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QOpenGLWidget
-from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QPushButton, QFileDialog, QLabel, QComboBox, QAction, QSlider, QHBoxLayout
+from PyQt5.QtWidgets import QPushButton, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QFileDialog, QComboBox, QWidget
+from PyQt5.QtGui import QPixmap, QIcon
+
+class ImagePreviewButton(QPushButton):
+    def __init__(self, text, parent=None):
+        super().__init__(text, parent)
+        self.setStyleSheet("background-color: #333333; color: white; border: 1px solid #555555;")  # Color oscuro
+        self.setFixedSize(100, 100)  # Tamaño más pequeño para los botones de vista previa
+        self.image = None
+
+    def set_image(self, image_path):
+        pixmap = QPixmap(image_path)
+        self.image = pixmap
+        self.set_icon(pixmap)
+
+    def set_icon(self, pixmap):
+        icon = QIcon(pixmap)
+        self.setIcon(icon)
+        self.setIconSize(pixmap.size())
 
 class Properties(QWidget):
     def __init__(self, model_widget):
@@ -16,24 +32,24 @@ class Properties(QWidget):
         self.material_combo.currentIndexChanged.connect(self.on_material_changed)
         layout.addWidget(self.material_combo)
 
-        self.albedo_button = QPushButton('Cargar Albedo')
+        self.albedo_button = ImagePreviewButton('Albedo')
         self.albedo_button.clicked.connect(self.load_albedo_texture)
         layout.addWidget(self.albedo_button)
 
-        self.normal_button = QPushButton('Cargar Normal')
+        self.normal_button = ImagePreviewButton('Normal')
         self.normal_button.clicked.connect(self.load_normal_texture)
         layout.addWidget(self.normal_button)
 
         # Botones adicionales para nuevas texturas
-        self.roughness_button = QPushButton('Cargar Roughness')
+        self.roughness_button = ImagePreviewButton('Roughness')
         self.roughness_button.clicked.connect(self.load_roughness_texture)
         layout.addWidget(self.roughness_button)
 
-        self.metalness_button = QPushButton('Cargar Metalness')
+        self.metalness_button = ImagePreviewButton('Metalness')
         self.metalness_button.clicked.connect(self.load_metalness_texture)
         layout.addWidget(self.metalness_button)
 
-        self.ao_button = QPushButton('Cargar Ambient Occlusion')
+        self.ao_button = ImagePreviewButton('Ambient Occlusion')
         self.ao_button.clicked.connect(self.load_ao_texture)
         layout.addWidget(self.ao_button)
 
@@ -42,7 +58,7 @@ class Properties(QWidget):
         self.scale_label = QLabel('Escala:')
         self.scale_slider = QSlider(Qt.Horizontal)
         self.scale_slider.setMinimum(1)
-        self.scale_slider.setMaximum(10000)
+        self.scale_slider.setMaximum(100000)
         self.scale_slider.setValue(100)  # Valor inicial
         self.scale_slider.valueChanged.connect(self.update_scale)
         scale_layout.addWidget(self.scale_label)
@@ -66,6 +82,7 @@ class Properties(QWidget):
         if filename:
             print(f"Albedo para {material_name}: {filename}")
             self.model_widget.load_texture(material_name, filename)
+            self.albedo_button.set_image(filename)
 
     def load_normal_texture(self):
         material_name = self.material_combo.currentText()
@@ -73,6 +90,7 @@ class Properties(QWidget):
         if filename:
             print(f"Normal para {material_name}: {filename}")
             self.model_widget.load_texture(material_name, filename)
+            self.normal_button.set_image(filename)
 
     def load_roughness_texture(self):
         material_name = self.material_combo.currentText()
@@ -80,6 +98,7 @@ class Properties(QWidget):
         if filename:
             print(f"Roughness para {material_name}: {filename}")
             self.model_widget.load_texture(material_name, filename)
+            self.roughness_button.set_image(filename)
 
     def load_metalness_texture(self):
         material_name = self.material_combo.currentText()
@@ -87,6 +106,7 @@ class Properties(QWidget):
         if filename:
             print(f"Metalness para {material_name}: {filename}")
             self.model_widget.load_texture(material_name, filename)
+            self.metalness_button.set_image(filename)
 
     def load_ao_texture(self):
         material_name = self.material_combo.currentText()
@@ -94,6 +114,7 @@ class Properties(QWidget):
         if filename:
             print(f"Ambient Occlusion para {material_name}: {filename}")
             self.model_widget.load_texture(material_name, filename)
+            self.ao_button.set_image(filename)
 
     def update_scale(self):
         scale_value = self.scale_slider.value() / 100  # Ajusta el valor
