@@ -26,7 +26,6 @@ class Skybox:
         glPushMatrix()
         # Desactivar iluminación para el skybox
         glDisable(GL_LIGHTING)
-        gluQuadricNormals(quadric, GL_NONE)
         glColor3f(1.0, 1.0, 1.0)  # Color blanco para la esfera
 
         # Aplicar rotación
@@ -37,9 +36,9 @@ class Skybox:
         size = 120  # Radio de la esfera
         quadric = gluNewQuadric()
         gluQuadricTexture(quadric, GL_TRUE)  # Activar coordenadas de textura en la esfera
+        gluQuadricNormals(quadric, GL_NONE)
         gluSphere(quadric, size, 50, 50)  # Crear la esfera con textura
 
-        glDisable(GL_LIGHTING)  # Reactivar iluminación después del skybox
         glPopMatrix()
 
         if self.texture_id:
