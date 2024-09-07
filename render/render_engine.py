@@ -17,7 +17,7 @@ class Render(QOpenGLWidget):
         self.model = None
         self.materials = {}
         self.current_material = None
-        self.camera_distance = 20.0  # Distancia inicial de la cámara
+        self.camera_distance = 120.0  # Distancia inicial de la cámara
         self.scale_factor = 1.0  # Factor de escala inicial
         self.texture_loader = TextureLoader()  # Instanciar TextureLoader
         self.skybox = Skybox()
@@ -117,7 +117,7 @@ class Render(QOpenGLWidget):
         glViewport(0, 0, w, h)
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        gluPerspective(45, (w / h), 0.1, 50.0)
+        gluPerspective(45, (w / h), 0.1, 100000.0)
         glMatrixMode(GL_MODELVIEW)
 
     def update_materials(self):
