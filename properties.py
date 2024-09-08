@@ -14,6 +14,10 @@ class ImagePreviewButton(QPushButton):
         self.image = pixmap
         self.set_icon(pixmap)
 
+    def clear_image(self):
+        self.setIcon(QIcon())  # Limpia la imagen del botón
+        self.image = None
+
     def set_icon(self, pixmap):
         icon = QIcon(pixmap)
         self.setIcon(icon)
@@ -32,26 +36,55 @@ class Properties(QWidget):
         self.material_combo.currentIndexChanged.connect(self.on_material_changed)
         layout.addWidget(self.material_combo)
 
+        # Layout para Albedo
+        albedo_layout = QHBoxLayout()
         self.albedo_button = ImagePreviewButton('Albedo')
         self.albedo_button.clicked.connect(self.load_albedo_texture)
-        layout.addWidget(self.albedo_button)
+        albedo_layout.addWidget(self.albedo_button)
+        remove_albedo_button = QPushButton("Eliminar Albedo")
+        remove_albedo_button.clicked.connect(self.remove_albedo_texture)
+        albedo_layout.addWidget(remove_albedo_button)
+        layout.addLayout(albedo_layout)
 
+        # Layout para Normal
+        normal_layout = QHBoxLayout()
         self.normal_button = ImagePreviewButton('Normal')
         self.normal_button.clicked.connect(self.load_normal_texture)
-        layout.addWidget(self.normal_button)
+        normal_layout.addWidget(self.normal_button)
+        remove_normal_button = QPushButton("Eliminar Normal")
+        remove_normal_button.clicked.connect(self.remove_normal_texture)
+        normal_layout.addWidget(remove_normal_button)
+        layout.addLayout(normal_layout)
 
-        # Botones adicionales para nuevas texturas
+        # Layout para Roughness
+        roughness_layout = QHBoxLayout()
         self.roughness_button = ImagePreviewButton('Roughness')
         self.roughness_button.clicked.connect(self.load_roughness_texture)
-        layout.addWidget(self.roughness_button)
+        roughness_layout.addWidget(self.roughness_button)
+        remove_roughness_button = QPushButton("Eliminar Roughness")
+        remove_roughness_button.clicked.connect(self.remove_roughness_texture)
+        roughness_layout.addWidget(remove_roughness_button)
+        layout.addLayout(roughness_layout)
 
+        # Layout para Metalness
+        metalness_layout = QHBoxLayout()
         self.metalness_button = ImagePreviewButton('Metalness')
         self.metalness_button.clicked.connect(self.load_metalness_texture)
-        layout.addWidget(self.metalness_button)
+        metalness_layout.addWidget(self.metalness_button)
+        remove_metalness_button = QPushButton("Eliminar Metalness")
+        remove_metalness_button.clicked.connect(self.remove_metalness_texture)
+        metalness_layout.addWidget(remove_metalness_button)
+        layout.addLayout(metalness_layout)
 
+        # Layout para Ambient Occlusion
+        ao_layout = QHBoxLayout()
         self.ao_button = ImagePreviewButton('Ambient Occlusion')
         self.ao_button.clicked.connect(self.load_ao_texture)
-        layout.addWidget(self.ao_button)
+        ao_layout.addWidget(self.ao_button)
+        remove_ao_button = QPushButton("Eliminar AO")
+        remove_ao_button.clicked.connect(self.remove_ao_texture)
+        ao_layout.addWidget(remove_ao_button)
+        layout.addLayout(ao_layout)
 
         # Añadir control de escala
         scale_layout = QHBoxLayout()
@@ -75,6 +108,32 @@ class Properties(QWidget):
     def on_material_changed(self, index):
         material_name = self.material_combo.currentText()
         print(f"Material seleccionado: {material_name}")
+        # Actualizar los botones de vista previa de las texturas
+        self.update_texture_buttons(material_name)
+
+    def update_texture_buttons(self, material_name):
+        if material_name in self.model_widget.materials:
+            material = self.model_widget.materials[material_name]
+            if 'albedo' in material:
+                self.albedo_button.set_image(material['albedo'])
+            else:
+                self.albedo_button.clear_image()
+            if 'normal' in material:
+                self.normal_button.set_image(material['normal'])
+            else:
+                self.normal_button.clear_image()
+            if 'roughness' in material:
+                self.roughness_button.set_image(material['roughness'])
+            else:
+                self.roughness_button.clear_image()
+            if 'metalness' in material:
+                self.metalness_button.set_image(material['metalness'])
+            else:
+                self.metalness_button.clear_image()
+            if 'ao' in material:
+                self.ao_button.set_image(material['ao'])
+            else:
+                self.ao_button.clear_image()
 
     def load_albedo_texture(self):
         material_name = self.material_combo.currentText()
@@ -115,6 +174,32 @@ class Properties(QWidget):
             print(f"Ambient Occlusion para {material_name}: {filename}")
             self.model_widget.load_texture(material_name, filename)
             self.ao_button.set_image(filename)
+
+    # Métodos para eliminar texturas individuales
+    def remove_albedo_texture(self):
+        material_name = self.material_combo.currentText()
+        self.model_widget.remove_texture(material_name, 'albedo')
+        self.albedo_button.clear_image()
+
+    def remove_normal_texture(self):
+        material_name = self.material_combo.currentText()
+        self.model_widget.remove_texture(material_name, 'normal')
+        self.normal_button.clear_image()
+
+    def remove_roughness_texture(self):
+        material_name = self.material_combo.currentText()
+        self.model_widget.remove_texture(material_name, 'roughness')
+        self.roughness_button.clear_image()
+
+    def remove_metalness_texture(self):
+        material_name = self.material_combo.currentText()
+        self.model_widget.remove_texture(material_name, 'metalness')
+        self.metalness_button.clear_image()
+
+    def remove_ao_texture(self):
+        material_name = self.material_combo.currentText()
+        self.model_widget.remove_texture(material_name, 'ao')
+        self.ao_button.clear_image()
 
     def update_scale(self):
         scale_value = self.scale_slider.value() / 100  # Ajusta el valor
