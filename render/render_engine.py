@@ -34,7 +34,7 @@ class Render(QOpenGLWidget):
         # Configurar OpenCL
         self.cl_context = None
         self.cl_queue = None
-        self.init_opencl()
+        #self.init_opencl()
 
     def init_opencl(self):
         platforms = cl.get_platforms()
