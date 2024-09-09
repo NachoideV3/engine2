@@ -146,6 +146,13 @@ class Render(QOpenGLWidget):
         # Actualiza la lista de materiales en la ventana de texturas
         if self.parent() and hasattr(self.parent(), 'texture_window'):
             self.parent().texture_window.update_material_list()
+    
+    def remove_texture(self, material_name, texture_type):
+        if material_name in self.materials and texture_type in self.materials[material_name]:
+            self.materials[material_name][texture_type] = None
+            print(f"Textura {texture_type} eliminada del material {material_name}.")
+        else:
+            print(f"Error: No se puede eliminar la textura {texture_type} del material {material_name}.")
 
     def set_scale(self, scale):
         self.scale_factor = scale
