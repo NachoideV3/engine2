@@ -10,7 +10,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Darkmoon Engine')
-        self.setGeometry(100, 100, 1280, 720)
+        self.setGeometry(100, 100, 1600, 900)
 
         self.render_widget = Render()
         self.setCentralWidget(self.render_widget)
@@ -57,7 +57,7 @@ class MainWindow(QMainWindow):
         file_menu.addAction(properties_action)
 
     def open_file(self):
-        filename, _ = QFileDialog.getOpenFileName(self, 'Abrir Modelo 3D', '', 'Modelos (*.obj)')
+        filename, _ = QFileDialog.getOpenFileName(self, 'Open Model 3D', '', 'Models (*.obj)')
         if filename:
             self.render_widget.load_model(filename)
             self.properties_widget.update_material_list()
