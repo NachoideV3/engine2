@@ -60,7 +60,7 @@ class Render(QOpenGLWidget):
         glClearColor(0.0, 0.0, 0.0, 1.0)  # Fondo negro
         # Inicializar el skybox
         self.skybox.initialize()
-        self.skybox.load_texture('hdri/meadow_2.jpg')
+        self.skybox.load_texture('hdri/brown_photostudio_01.jpg')
         self.skybox.set_rotation(90,180)
 
     def load_texture(self, material_name, filename):
