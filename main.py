@@ -11,6 +11,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle('Darkmoon Engine')
         self.setGeometry(100, 100, 1600, 900)
+        self.showMaximized()
 
         self.render_widget = Render()
         self.setCentralWidget(self.render_widget)
@@ -56,7 +57,7 @@ class MainWindow(QMainWindow):
         properties_action.triggered.connect(self.toggle_properties_window)
         file_menu.addAction(properties_action)
 
-    def open_file(self):
+    def open_file(self):    
         filename, _ = QFileDialog.getOpenFileName(self, 'Open Model 3D', '', 'Models (*.obj)')
         if filename:
             self.render_widget.load_model(filename)
