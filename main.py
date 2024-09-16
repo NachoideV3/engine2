@@ -11,7 +11,6 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle('Darkmoon Engine')
         self.setGeometry(100, 100, 1600, 900)
-        self.showMaximized()
 
         self.render_widget = Render()
         self.setCentralWidget(self.render_widget)
@@ -36,6 +35,7 @@ class MainWindow(QMainWindow):
         self.properties_widget.setGeometry(900, 100, 300, 200)
 
         self.create_menu()
+        self.showMaximized()
         self.showMaximized()
 
     def create_menu(self):
