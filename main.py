@@ -11,14 +11,13 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle('Darkmoon Engine')
         self.setGeometry(100, 100, 1600, 900)
-        self.showMaximized()
 
         self.render_widget = Render()
         self.setCentralWidget(self.render_widget)
 
         # Crear un QLabel para mostrar FPS
         self.fps_label = QLabel(self)
-        self.fps_label.setStyleSheet("color: white; background-color: rgba(0, 0, 0, 0.7); padding: 5px;")
+        self.fps_label.setStyleSheet("color: cyan; background-color: rgba(0, 0, 0, 0.7); padding: 5px;")
         self.fps_label.move(10, 10)  # Posición inicial en la esquina superior izquierda
         self.fps_label.setMinimumSize(170, 40)
         #self.fps_label.hide()  # Ocultar inicialmente
@@ -36,6 +35,7 @@ class MainWindow(QMainWindow):
         self.properties_widget.setGeometry(900, 100, 300, 200)
 
         self.create_menu()
+        self.showMaximized()
 
     def create_menu(self):
         self.menuBar().clear()
