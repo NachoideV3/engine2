@@ -34,25 +34,13 @@ class Render(QOpenGLWidget):
         # Configurar OpenCL
         self.cl_context = None
         self.cl_queue = None
-        self.cl_program = None
-        self.cl_kernel = None
-        self.init_opencl()
+        #self.init_opencl()
 
     def init_opencl(self):
         platforms = cl.get_platforms()
         devices = platforms[0].get_devices(cl.device_type.GPU)
         self.cl_context = cl.Context([devices[0]])
         self.cl_queue = cl.CommandQueue(self.cl_context)
-
-        # Crear y construir el programa OpenCL
-        cl_code = """
-        __kernel void simple_add(__global const float* a, __global const float* b, __global float* result) {
-            int gid = get_global_id(0);
-            result[gid] = a[gid] + b[gid];
-        }
-        """
-        self.cl_program = cl.Program(self.cl_context, cl_code).build()
-        self.cl_kernel = self.cl_program.simple_add
 
     def initializeGL(self):
         glutInit()
@@ -73,7 +61,7 @@ class Render(QOpenGLWidget):
         # Inicializar el skybox
         self.skybox.initialize()
         self.skybox.load_texture('hdri/meadow_2.jpg')
-        self.skybox.set_rotation(90, 180)
+        self.skybox.set_rotation(90,180)
 
     def load_texture(self, material_name, filename):
         self.texture_loader.load_texture(material_name, filename)
@@ -131,23 +119,9 @@ class Render(QOpenGLWidget):
             self.elapsed_timer.restart()
 
     def perform_opencl_computation(self):
-        # Crear datos de ejemplo para la computación OpenCL
-        a = np.array([1.0, 2.0, 3.0, 4.0], dtype=np.float32)
-        b = np.array([5.0, 6.0, 7.0, 8.0], dtype=np.float32)
-        result = np.empty_like(a)
-
-        # Crear buffers OpenCL
-        mf = cl.mem_flags
-        a_buffer = cl.Buffer(self.cl_context, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf=a)
-        b_buffer = cl.Buffer(self.cl_context, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf=b)
-        result_buffer = cl.Buffer(self.cl_context, mf.WRITE_ONLY, result.nbytes)
-
-        # Ejecutar el kernel
-        self.cl_kernel.set_args(a_buffer, b_buffer, result_buffer)
-        cl.enqueue_nd_range_kernel(self.cl_queue, self.cl_kernel, a.shape, None)
-        cl.enqueue_copy(self.cl_queue, result, result_buffer).wait()
-
-        print("OpenCL Result:", result)
+        # Ejemplo de código OpenCL para realizar cálculos
+        # Crea un buffer y un programa OpenCL aquí
+        pass
 
     def wheelEvent(self, event):
         self.input_handler.handle_wheel_event(event)
