@@ -28,14 +28,15 @@ class Properties(QWidget):
     def __init__(self, model_widget):
         super().__init__()
         self.model_widget = model_widget
-        self.scale_locked = False  # Bandera para saber si la escala está bloqueada
+        self.scale_locked = True  # Bandera para saber si la escala está bloqueada
         self.initUI()
 
     def initUI(self):
         layout = QVBoxLayout()
-
         # Sección de Materials
-        layout.addWidget(QLabel("Materials"))
+        label = QLabel("Materials")
+        layout.addWidget(label)
+        label.setStyleSheet("color: cyan; font-size: 16px; font-weight: bold;")
         
         self.material_combo = QComboBox()
         self.material_combo.currentIndexChanged.connect(self.on_material_changed)
@@ -83,7 +84,7 @@ class Properties(QWidget):
 
         # Layout para Ambient Occlusion
         ao_layout = QHBoxLayout()
-        self.ao_button = ImagePreviewButton('Ambient Occlusion')
+        self.ao_button = ImagePreviewButton('AO')
         self.ao_button.clicked.connect(self.load_ao_texture)
         ao_layout.addWidget(self.ao_button)
         remove_ao_button = QPushButton("Delete AO")
@@ -92,7 +93,9 @@ class Properties(QWidget):
         layout.addLayout(ao_layout)
 
         # Sección de Transform
-        layout.addWidget(QLabel("Transform"))
+        label2 = QLabel("Transform")
+        layout.addWidget(label2)
+        label2.setStyleSheet("color: cyan; font-size: 16px; font-weight: bold;")
 
         # Layout para Position
         position_layout = QHBoxLayout()
