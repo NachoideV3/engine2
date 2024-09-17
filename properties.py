@@ -240,10 +240,10 @@ class Properties(QWidget):
     def update_scale_lock_icon(self):
         if self.scale_locked:
             pass
-            #self.scale_lock_button.setIcon(QIcon("candado_cerrado.png"))
+            self.scale_lock_button.setIcon(QIcon(QIcon.fromTheme("lock")))
         else:
             pass
-            #self.scale_lock_button.setIcon(QIcon("candado_abierto.png"))
+            self.scale_lock_button.setIcon(QIcon(QIcon.fromTheme("unlock")))
 
     def sync_scale_if_locked(self):
         if self.scale_locked:
