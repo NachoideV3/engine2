@@ -88,11 +88,11 @@ class Properties(QWidget):
 
         # Añadir control de escala
         scale_layout = QHBoxLayout()
-        self.scale_label = QLabel('Escala:')
+        self.scale_label = QLabel('Scale:')
         self.scale_slider = QSlider(Qt.Horizontal)
         self.scale_slider.setMinimum(1)
         self.scale_slider.setMaximum(100000)
-        self.scale_slider.setValue(100)  # Valor inicial
+        self.scale_slider.setValue(1000)  # Valor inicial
         self.scale_slider.valueChanged.connect(self.update_scale)
         scale_layout.addWidget(self.scale_label)
         scale_layout.addWidget(self.scale_slider)
