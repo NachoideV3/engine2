@@ -203,5 +203,5 @@ class Properties(QWidget):
 
     def update_scale(self):
         scale_value = self.scale_slider.value() / 100  # Ajusta el valor
-        print(f"Factor de escala: {scale_value}")
+        print(f"Scale: {scale_value}")
         self.model_widget.set_scale(scale_value)
