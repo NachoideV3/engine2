@@ -33,6 +33,58 @@ class Properties(QWidget):
 
     def initUI(self):
         layout = QVBoxLayout()
+
+        # Sección de Transform
+        label2 = QLabel("Transform")
+        layout.addWidget(label2)
+        label2.setStyleSheet("color: cyan; font-size: 16px; font-weight: bold;")
+
+        # Layout para Position
+        position_layout = QHBoxLayout()
+        self.position_x = self.create_transform_spinbox('X:')
+        self.position_y = self.create_transform_spinbox('Y:')
+        self.position_z = self.create_transform_spinbox('Z:')
+        position_layout.addWidget(QLabel('Position:'))
+        position_layout.addWidget(self.position_x)
+        position_layout.addWidget(self.position_y)
+        position_layout.addWidget(self.position_z)
+        layout.addLayout(position_layout)
+
+        # Layout para Rotation
+        rotation_layout = QHBoxLayout()
+        self.rotation_x = self.create_transform_spinbox('X:')
+        self.rotation_y = self.create_transform_spinbox('Y:')
+        self.rotation_z = self.create_transform_spinbox('Z:')
+        rotation_layout.addWidget(QLabel('Rotation:'))
+        rotation_layout.addWidget(self.rotation_x)
+        rotation_layout.addWidget(self.rotation_y)
+        rotation_layout.addWidget(self.rotation_z)
+        layout.addLayout(rotation_layout)
+
+        # Layout para Scale con botón de bloqueo
+        scale_layout = QHBoxLayout()
+        self.scale_x = self.create_transform_spinbox('X:', min_val=0.1)
+        self.scale_y = self.create_transform_spinbox('Y:', min_val=0.1)
+        self.scale_z = self.create_transform_spinbox('Z:', min_val=0.1)
+
+        self.scale_lock_button = QPushButton()
+        self.update_scale_lock_icon()
+        self.scale_lock_button.setCheckable(True)
+        self.scale_lock_button.clicked.connect(self.toggle_scale_lock)
+
+        scale_layout.addWidget(QLabel('Scale:'))
+        scale_layout.addWidget(self.scale_x)
+        scale_layout.addWidget(self.scale_y)
+        scale_layout.addWidget(self.scale_z)
+        scale_layout.addWidget(self.scale_lock_button)
+
+        layout.addLayout(scale_layout)
+
+        # Conectar los spinboxes de escala para sincronización
+        self.scale_x.valueChanged.connect(self.sync_scale_if_locked)
+        self.scale_y.valueChanged.connect(self.sync_scale_if_locked)
+        self.scale_z.valueChanged.connect(self.sync_scale_if_locked)
+
         # Sección de Materials
         label = QLabel("Materials")
         layout.addWidget(label)
@@ -92,56 +144,6 @@ class Properties(QWidget):
         ao_layout.addWidget(remove_ao_button)
         layout.addLayout(ao_layout)
 
-        # Sección de Transform
-        label2 = QLabel("Transform")
-        layout.addWidget(label2)
-        label2.setStyleSheet("color: cyan; font-size: 16px; font-weight: bold;")
-
-        # Layout para Position
-        position_layout = QHBoxLayout()
-        self.position_x = self.create_transform_spinbox('X:')
-        self.position_y = self.create_transform_spinbox('Y:')
-        self.position_z = self.create_transform_spinbox('Z:')
-        position_layout.addWidget(QLabel('Position:'))
-        position_layout.addWidget(self.position_x)
-        position_layout.addWidget(self.position_y)
-        position_layout.addWidget(self.position_z)
-        layout.addLayout(position_layout)
-
-        # Layout para Rotation
-        rotation_layout = QHBoxLayout()
-        self.rotation_x = self.create_transform_spinbox('X:')
-        self.rotation_y = self.create_transform_spinbox('Y:')
-        self.rotation_z = self.create_transform_spinbox('Z:')
-        rotation_layout.addWidget(QLabel('Rotation:'))
-        rotation_layout.addWidget(self.rotation_x)
-        rotation_layout.addWidget(self.rotation_y)
-        rotation_layout.addWidget(self.rotation_z)
-        layout.addLayout(rotation_layout)
-
-        # Layout para Scale con botón de bloqueo
-        scale_layout = QHBoxLayout()
-        self.scale_x = self.create_transform_spinbox('X:', min_val=0.1)
-        self.scale_y = self.create_transform_spinbox('Y:', min_val=0.1)
-        self.scale_z = self.create_transform_spinbox('Z:', min_val=0.1)
-
-        self.scale_lock_button = QPushButton()
-        self.update_scale_lock_icon()
-        self.scale_lock_button.setCheckable(True)
-        self.scale_lock_button.clicked.connect(self.toggle_scale_lock)
-
-        scale_layout.addWidget(QLabel('Scale:'))
-        scale_layout.addWidget(self.scale_x)
-        scale_layout.addWidget(self.scale_y)
-        scale_layout.addWidget(self.scale_z)
-        scale_layout.addWidget(self.scale_lock_button)
-
-        layout.addLayout(scale_layout)
-
-        # Conectar los spinboxes de escala para sincronización
-        self.scale_x.valueChanged.connect(self.sync_scale_if_locked)
-        self.scale_y.valueChanged.connect(self.sync_scale_if_locked)
-        self.scale_z.valueChanged.connect(self.sync_scale_if_locked)
 
         self.setLayout(layout)
 
