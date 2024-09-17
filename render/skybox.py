@@ -15,7 +15,7 @@ class Skybox:
 
     def load_texture(self, texture_path):
         material_name = 'skybox_texture'
-        self.texture_loader.load_texture(material_name, texture_path, apply_blur=True, blur_radius=10)
+        self.texture_loader.load_texture(material_name, texture_path, apply_blur=True, blur_radius=5)
         self.texture_id = self.texture_loader.get_texture(material_name)
 
     def draw(self):
