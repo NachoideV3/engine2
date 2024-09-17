@@ -1,11 +1,12 @@
+#
 /.venv
 venv/
 env/
-
+#
 __pycache__/
 *.pyc
-
+#
 *.log
-
+#
 .vscode/
 .idea/
