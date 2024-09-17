@@ -1,15 +1,19 @@
 # texture_loader.py
 from OpenGL.GL import *
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFilter
 
 class TextureLoader:
     def __init__(self):
         self.textures = {}
 
-    def load_texture(self, material_name, filename):
+    def load_texture(self, material_name, filename, apply_blur=False, blur_radius=5):
         try:
             image = Image.open(filename)
+            #blur
+            if apply_blur:
+                image = image.filter(ImageFilter.GaussianBlur(radius=blur_radius))
+
             image = image.transpose(Image.FLIP_TOP_BOTTOM)
             image_data = np.array(image.convert("RGBA"), dtype=np.uint8)
 
