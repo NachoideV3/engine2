@@ -42,8 +42,11 @@ class Properties(QWidget):
         # Layout para Position
         position_layout = QHBoxLayout()
         self.position_x = self.create_transform_spinbox('X:')
+        self.position_x.setStyleSheet("color: red;")
         self.position_y = self.create_transform_spinbox('Y:')
+        self.position_y.setStyleSheet("color: green;")
         self.position_z = self.create_transform_spinbox('Z:')
+        self.position_z.setStyleSheet("color: blue;")
         position_layout.addWidget(QLabel('Position:'))
         position_layout.addWidget(self.position_x)
         position_layout.addWidget(self.position_y)
@@ -53,8 +56,11 @@ class Properties(QWidget):
         # Layout para Rotation
         rotation_layout = QHBoxLayout()
         self.rotation_x = self.create_transform_spinbox('X:')
+        self.rotation_x.setStyleSheet("color: red;")
         self.rotation_y = self.create_transform_spinbox('Y:')
+        self.rotation_y.setStyleSheet("color: green;")
         self.rotation_z = self.create_transform_spinbox('Z:')
+        self.rotation_z.setStyleSheet("color: blue;")
         rotation_layout.addWidget(QLabel('Rotation:'))
         rotation_layout.addWidget(self.rotation_x)
         rotation_layout.addWidget(self.rotation_y)
@@ -64,8 +70,11 @@ class Properties(QWidget):
         # Layout para Scale con botón de bloqueo
         scale_layout = QHBoxLayout()
         self.scale_x = self.create_transform_spinbox('X:', min_val=0.1)
+        self.scale_x.setStyleSheet("color: red;")
         self.scale_y = self.create_transform_spinbox('Y:', min_val=0.1)
+        self.scale_y.setStyleSheet("color: green;")
         self.scale_z = self.create_transform_spinbox('Z:', min_val=0.1)
+        self.scale_z.setStyleSheet("color: blue;")
 
         self.scale_lock_button = QPushButton()
         self.update_scale_lock_icon()
@@ -73,10 +82,10 @@ class Properties(QWidget):
         self.scale_lock_button.clicked.connect(self.toggle_scale_lock)
 
         scale_layout.addWidget(QLabel('Scale:'))
+        scale_layout.addWidget(self.scale_lock_button)
         scale_layout.addWidget(self.scale_x)
         scale_layout.addWidget(self.scale_y)
         scale_layout.addWidget(self.scale_z)
-        scale_layout.addWidget(self.scale_lock_button)
 
         layout.addLayout(scale_layout)
 
