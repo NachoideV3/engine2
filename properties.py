@@ -5,7 +5,7 @@ from PyQt5.QtGui import QPixmap, QIcon
 class ImagePreviewButton(QPushButton):
     def __init__(self, text, parent=None):
         super().__init__(text, parent)
-        self.setStyleSheet("background-color: #333333; color: white; border: 1px solid #555555;")  # Color oscuro
+        self.setStyleSheet("background-color: #333333; color: cyan; border: 1px solid #555555;")  # Color oscuro
         self.setFixedSize(100, 100)  # Tamaño más pequeño para los botones de vista previa
         self.image = None
 
@@ -41,7 +41,7 @@ class Properties(QWidget):
         self.albedo_button = ImagePreviewButton('Albedo')
         self.albedo_button.clicked.connect(self.load_albedo_texture)
         albedo_layout.addWidget(self.albedo_button)
-        remove_albedo_button = QPushButton("Eliminar Albedo")
+        remove_albedo_button = QPushButton("Delete Albedo")
         remove_albedo_button.clicked.connect(self.remove_albedo_texture)
         albedo_layout.addWidget(remove_albedo_button)
         layout.addLayout(albedo_layout)
@@ -51,7 +51,7 @@ class Properties(QWidget):
         self.normal_button = ImagePreviewButton('Normal')
         self.normal_button.clicked.connect(self.load_normal_texture)
         normal_layout.addWidget(self.normal_button)
-        remove_normal_button = QPushButton("Eliminar Normal")
+        remove_normal_button = QPushButton("Delete Normal")
         remove_normal_button.clicked.connect(self.remove_normal_texture)
         normal_layout.addWidget(remove_normal_button)
         layout.addLayout(normal_layout)
@@ -61,7 +61,7 @@ class Properties(QWidget):
         self.roughness_button = ImagePreviewButton('Roughness')
         self.roughness_button.clicked.connect(self.load_roughness_texture)
         roughness_layout.addWidget(self.roughness_button)
-        remove_roughness_button = QPushButton("Eliminar Roughness")
+        remove_roughness_button = QPushButton("Delete Roughness")
         remove_roughness_button.clicked.connect(self.remove_roughness_texture)
         roughness_layout.addWidget(remove_roughness_button)
         layout.addLayout(roughness_layout)
@@ -71,7 +71,7 @@ class Properties(QWidget):
         self.metalness_button = ImagePreviewButton('Metalness')
         self.metalness_button.clicked.connect(self.load_metalness_texture)
         metalness_layout.addWidget(self.metalness_button)
-        remove_metalness_button = QPushButton("Eliminar Metalness")
+        remove_metalness_button = QPushButton("Delete Metalness")
         remove_metalness_button.clicked.connect(self.remove_metalness_texture)
         metalness_layout.addWidget(remove_metalness_button)
         layout.addLayout(metalness_layout)
@@ -81,7 +81,7 @@ class Properties(QWidget):
         self.ao_button = ImagePreviewButton('Ambient Occlusion')
         self.ao_button.clicked.connect(self.load_ao_texture)
         ao_layout.addWidget(self.ao_button)
-        remove_ao_button = QPushButton("Eliminar AO")
+        remove_ao_button = QPushButton("Delete AO")
         remove_ao_button.clicked.connect(self.remove_ao_texture)
         ao_layout.addWidget(remove_ao_button)
         layout.addLayout(ao_layout)
@@ -175,7 +175,7 @@ class Properties(QWidget):
             self.model_widget.load_texture(material_name, filename)
             self.ao_button.set_image(filename)
 
-    # Métodos para eliminar texturas individuales
+    # Métodos para Delete texturas individuales
     def remove_albedo_texture(self):
         material_name = self.material_combo.currentText()
         self.model_widget.remove_texture(material_name, 'albedo')
