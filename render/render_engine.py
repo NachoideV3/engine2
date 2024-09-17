@@ -34,13 +34,23 @@ class Render(QOpenGLWidget):
         # Configurar OpenCL
         self.cl_context = None
         self.cl_queue = None
-        #self.init_opencl()
+        self.init_opencl()
 
     def init_opencl(self):
-        platforms = cl.get_platforms()
-        devices = platforms[0].get_devices(cl.device_type.GPU)
-        self.cl_context = cl.Context([devices[0]])
-        self.cl_queue = cl.CommandQueue(self.cl_context)
+        try:
+            platforms = cl.get_platforms()
+            if not platforms:
+                print("No OpenCL platforms found.")
+                return
+            devices = platforms[0].get_devices(device_type=cl.device_type.GPU)
+            if not devices:
+                print("No GPU devices found.")
+                return
+            self.cl_context = cl.Context([devices[0]])
+            self.cl_queue = cl.CommandQueue(self.cl_context)
+            print(f"OpenCL initialized with device: {devices[0].name}")
+        except cl.Error as e:
+            print(f"Error initializing OpenCL: {e}")
 
     def initializeGL(self):
         glutInit()
@@ -61,7 +71,7 @@ class Render(QOpenGLWidget):
         # Inicializar el skybox
         self.skybox.initialize()
         self.skybox.load_texture('hdri/brown_photostudio_01.jpg')
-        self.skybox.set_rotation(90,180)
+        self.skybox.set_rotation(90, 180)
 
     def load_texture(self, material_name, filename):
         self.texture_loader.load_texture(material_name, filename)
@@ -119,9 +129,12 @@ class Render(QOpenGLWidget):
             self.elapsed_timer.restart()
 
     def perform_opencl_computation(self):
-        # Ejemplo de código OpenCL para realizar cálculos
-        # Crea un buffer y un programa OpenCL aquí
-        pass
+        if self.cl_context and self.cl_queue:
+            # Ejemplo de código OpenCL para realizar cálculos
+            # Crea un buffer y un programa OpenCL aquí
+            pass
+        else:
+            print("OpenCL not initialized. Skipping computation.")
 
     def wheelEvent(self, event):
         self.input_handler.handle_wheel_event(event)
@@ -146,7 +159,7 @@ class Render(QOpenGLWidget):
         # Actualiza la lista de materiales en la ventana de texturas
         if self.parent() and hasattr(self.parent(), 'texture_window'):
             self.parent().texture_window.update_material_list()
-    
+
     def remove_texture(self, material_name, texture_type):
         if material_name in self.materials and texture_type in self.materials[material_name]:
             self.materials[material_name][texture_type] = None
