@@ -11,3 +11,5 @@ __pycache__/
 #
 .vscode/
 .idea/
+render/__pycache__/render_engine.cpython-312.pyc
+render/__pycache__/skybox.cpython-312.pyc
