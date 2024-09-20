@@ -5,10 +5,12 @@ from PyQt5.QtCore import QTimer, QElapsedTimer
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
+from OpenGL.GL.shaders import compileShader, compileProgram
 from .skybox import Skybox
 from .loader.texture_loader import TextureLoader
 from .loader.model_loader import load_model
 from input.input_handler import InputHandler
+import os
 
 class Render(QOpenGLWidget):
     def __init__(self):
@@ -30,6 +32,9 @@ class Render(QOpenGLWidget):
         self.frame_count = 0
         self.fps = 0
         self.ms_per_frame = 0
+
+        # Configuración para shaders
+        self.shader_program = None
 
         # Configurar OpenCL
         self.cl_context = None
@@ -55,26 +60,29 @@ class Render(QOpenGLWidget):
     def initializeGL(self):
         glutInit()
         glEnable(GL_DEPTH_TEST)
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
-        glEnable(GL_COLOR_MATERIAL)
-        glEnable(GL_NORMALIZE)
 
-        # Configurar la luz
-        light_pos = [5, 5, 5, 1]
-        glLightfv(GL_LIGHT0, GL_POSITION, light_pos)
-        light_color = [1, 1, 1, 1]
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, light_color)
-        glLightfv(GL_LIGHT0, GL_SPECULAR, light_color)
+        # Cargar y compilar los shaders
+        self.shader_program = self.create_shader_program("glsl/vertex_shader.glsl", "glsl/fragment_shader.glsl")
 
-        glClearColor(0.0, 0.0, 0.0, 1.0)  # Fondo negro
-        # Inicializar el skybox
+        # Configurar la textura del skybox
         self.skybox.initialize()
         self.skybox.load_texture('hdri/brown_photostudio_01.jpg')
         self.skybox.set_rotation(90, 180)
 
+    def create_shader_program(self, vertex_file_path, fragment_file_path):
+        """Función para cargar, compilar y enlazar shaders."""
+        with open(vertex_file_path, 'r') as f:
+            vertex_shader_source = f.read()
+        with open(fragment_file_path, 'r') as f:
+            fragment_shader_source = f.read()
+
+        vertex_shader = compileShader(vertex_shader_source, GL_VERTEX_SHADER)
+        fragment_shader = compileShader(fragment_shader_source, GL_FRAGMENT_SHADER)
+        return compileProgram(vertex_shader, fragment_shader)
+
     def load_texture(self, material_name, filename):
         self.texture_loader.load_texture(material_name, filename)
+        #self.use_texture = texture_loaded
 
     def load_model(self, filename):
         self.model, self.materials = load_model(filename)
@@ -85,8 +93,12 @@ class Render(QOpenGLWidget):
         glLoadIdentity()
         gluLookAt(0, 3, self.camera_distance, 0, 0, 0, 0, 1, 0)  # Usar la distancia de la cámara
 
+        # Usar el shader program
+        glUseProgram(self.shader_program)
+
+
         # Dibujar el skybox
-        self.skybox.draw()
+        #self.skybox.draw()
 
         # Realizar cálculos con OpenCL (ejemplo)
         self.perform_opencl_computation()
@@ -97,27 +109,22 @@ class Render(QOpenGLWidget):
             glPushMatrix()
             glScalef(self.scale_factor, self.scale_factor, self.scale_factor)  # Aplicar escala
             for face, face_uvs, material_name in faces:
-                if material_name and material_name in self.materials:
-                    texture_id = self.texture_loader.get_texture(material_name)
-                    if texture_id:
-                        glEnable(GL_TEXTURE_2D)
-                        glBindTexture(GL_TEXTURE_2D, texture_id)
-                    else:
-                        glDisable(GL_TEXTURE_2D)
-                else:
-                    glDisable(GL_TEXTURE_2D)  # Desactivar textura por defecto
+                texture_id = self.texture_loader.get_texture(material_name)
+                if texture_id:
+                    glActiveTexture(GL_TEXTURE0)
+                    glBindTexture(GL_TEXTURE_2D, texture_id)
 
                 glBegin(GL_TRIANGLES)
                 for vertex_index, uv_index in zip(face, face_uvs):
                     vertex = vertices[vertex_index]
                     if uv_index is not None:
                         uv = uvs[uv_index]
-                        glTexCoord2f(uv[0], uv[1])
-                    else:
-                        glTexCoord2f(0, 0)  # Valor predeterminado si no hay UV
+                        glVertexAttrib2f(1, uv[0], uv[1])  # Pasar las coordenadas UV
                     glVertex3f(*vertex)
                 glEnd()
             glPopMatrix()
+
+        glUseProgram(0)  # Desactivar el programa de shader después de renderizar
 
         # Actualizar contador de cuadros y calcular FPS y ms por cuadro
         self.frame_count += 1
